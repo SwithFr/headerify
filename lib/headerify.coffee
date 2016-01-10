@@ -18,9 +18,11 @@ module.exports =
     insertText: ( editor ) ->
         fs = require "fs"
 
+        console.log editor
+
         path = editor.getPath()
         file = fs.statSync path
-        createdAt = file.birthtime
+        createdAt = file.birthtime.goodFormat()
 
         editor.setCursorScreenPosition [ 0, 0 ]
 
@@ -28,28 +30,28 @@ module.exports =
 
         switch language
             when "CoffeeScript"
-              header = "# Comment header\n
-                    # #{ path } \n
-                    # Created at #{ createdAt.goodFormat() } \n"
+              header = "# Comment header \n
+                      # #{ path } \n
+                      # Created at #{ createdAt } \n"
             when "JavaScript"
-              header = "/* Comment header\n
+              header = "/* Comment header \n
                       * #{ path } \n
-                      * Created at #{ createdAt.goodFormat() } \n
+                      * Created at #{ createdAt } \n
                       */\n"
             when "Jade"
               header = "//\n
-                            Comment header\n
+                            Comment header \n
                             #{ path } \n
-                            Created at #{ createdAt.goodFormat() } \n"
+                            Created at #{ createdAt } \n"
             when "PHP"
-              header = "/** Comment header\n
+              header = "/** Comment header \n
                          * #{ path } \n
-                         * Created at #{ createdAt.goodFormat() } \n
+                         * Created at #{ createdAt } \n
                          */\n"
             when "HTML"
-              header = "<!-- Comment header\n
+              header = "<!-- Comment header \n
                          #{ path } \n
-                         Created at #{ createdAt.goodFormat() } \n
+                         Created at #{ createdAt } \n
                          -->\n"
 
         if !path
