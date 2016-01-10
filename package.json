@@ -1,0 +1,21 @@
+{
+  "name": "headerify",
+  "main": "./lib/headerify",
+  "version": "0.0.1",
+  "author": "Smith Jeremy @SwithFr",
+  "description": "A simple plugin to add a comment header on a file",
+  "keywords": [
+      "comment",
+      "header"
+  ],
+  "activationCommands": {
+    "atom-workspace": "headerify:add"
+  },
+  "repository": "https://github.com/SwithFr/headerify",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+  }
+}
