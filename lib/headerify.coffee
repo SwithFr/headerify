@@ -55,7 +55,7 @@ module.exports =
                          -->\n"
 
         if !path
-            editor.insertText "Save you file first!"
+            editor.insertText "Save your file first!"
             return
 
 
