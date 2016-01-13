@@ -1,4 +1,4 @@
-{CompositeDisposable} = require 'atom'
+{CompositeDisposable} = require "atom"
 fs = require "fs"
 
 module.exports =
@@ -8,7 +8,6 @@ module.exports =
         @subscriptions = new CompositeDisposable
         @subscriptions.add atom.commands.add "atom-workspace",
             "headerify:add": => @add()
-
 
     deactivate: ->
         @subscriptions.dispose()
@@ -23,56 +22,41 @@ module.exports =
         file.birthtime.goodFormat()
 
     getFileInfo: () ->
-        file = atom.workspace.getActivePaneItem().buffer.file
-        project = atom.project.relativizePath file.path
-        projectName = project[ 0 ].split( "/" ).pop()
-        filename = projectName + "/" + project[ 1 ]
-        createdAt = @getCreationDate file.path
-        author = process.env.USER || "Nameless"
+        if !atom.workspace.getActivePaneItem().buffer.file
+            throw new Error "Save your file first!"
+
+        oFile = atom.workspace.getActivePaneItem().buffer.file
+        atom.project.relativizePath oFile.path
+        oProject = atom.project.relativizePath oFile.path
+        sProjectName = oProject[ 0 ].split( "/" ).pop()
+        sFilename = sProjectName + "/" + oProject[ 1 ]
+        sCreatedAt = @getCreationDate oFile.path
+
+        sAuthor = process.env.USER || "Nameless"
 
         return {
-            "path": filename,
-            "createdAt": createdAt,
-            "author": author,
-            "projectName": projectName
+            "path": sFilename,
+            "createdAt": sCreatedAt,
+            "author": sAuthor,
+            "projectName": sProjectName
         }
+
+    getTemplate: ( language ) ->
+        return fs.readFileSync __dirname + "/templates/" + language + ".txt", encoding: "utf8"
 
     insertText: ( editor ) ->
         editor.setCursorScreenPosition [ 0, 0 ]
 
-        file = @getFileInfo()
-        language = editor.getGrammar().name
+        try
+            file = @getFileInfo()
+        catch oError
+            return atom.notifications.addError oError.message
 
-        switch language
-            when "CoffeeScript"
-              header = "# #{ file.projectName } \n
-                      # #{ file.path } - [Optional comment] \n
-                      # Created at #{ file.createdAt } by #{ file.author }\n"
-            when "JavaScript"
-              header = "/* #{ file.projectName } \n
-                      * #{ file.path } - [Optional comment] \n
-                      * Created at #{ file.createdAt } by #{ file.author } \n
-                      */\n"
-            when "Jade"
-              header = "//\n
-                            #{ file.projectName } \n
-                            #{ file.path } - [Optional comment] \n
-                            Created at #{ file.createdAt } by #{ file.author } \n"
-            when "PHP"
-              header = "/** #{ file.projectName } \n
-                         * #{ file.path } - [Optional comment] \n
-                         * Created at #{ file.createdAt } by #{ file.author } \n
-                         */"
-            when "HTML"
-              header = "<!-- #{ file.projectName } \n
-                         #{ file.path } - [Optional comment] \n
-                         Created at #{ file.createdAt } by #{ file.author } \n
-                         -->\n"
-
-        if !path
-            editor.insertText "Save your file first!"
-            return
-
+        header = @getTemplate( editor.getGrammar().name )
+        header = header.replace "{{ projectName }}", file.projectName
+        header = header.replace "{{ path }}", file.path
+        header = header.replace "{{ createdAt }}", file.createdAt
+        header = header.replace "{{ author }}", file.author
 
         editor.insertText header
 
