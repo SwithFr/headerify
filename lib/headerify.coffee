@@ -39,7 +39,13 @@ module.exports =
             "projectName": sProjectName
 
     getTemplate: ( sLanguage ) ->
-        fs.readFileSync __dirname + "/templates/" + sLanguage + ".txt", encoding: "utf8"
+        sFileName = __dirname + "/templates/" + sLanguage + ".txt"
+
+        fs.stat sFileName, ( oError, oStats ) ->
+            if oError
+                throw new Error "Language not supported!"
+
+        fs.readFileSync sFileName, encoding: "utf8"
 
     insertText: ( oEditor ) ->
         oEditor.setCursorScreenPosition [ 0, 0 ]
@@ -49,7 +55,12 @@ module.exports =
         catch oError
             return atom.notifications.addError oError.message
 
-        header = @getTemplate( oEditor.getGrammar().name )
+        try
+            header = @getTemplate oEditor.getGrammar().name
+        catch oErrror
+            console.log oErrror
+            return atom.notifications.addError oErrror.message
+
         header = header.replace "{{ projectName }}", file.projectName
         header = header.replace "{{ path }}", file.path
         header = header.replace "{{ createdAt }}", file.createdAt
