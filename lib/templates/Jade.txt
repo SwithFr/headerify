@@ -1,0 +1,4 @@
+//
+    {{ projectName }}
+    {{ path }} - [Optional comment]
+    Created at {{ createdAt }} by {{ author }}
