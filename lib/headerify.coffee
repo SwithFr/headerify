@@ -26,39 +26,36 @@ module.exports =
             throw new Error "Save your file first!"
 
         oFile = atom.workspace.getActivePaneItem().buffer.file
-        atom.project.relativizePath oFile.path
         oProject = atom.project.relativizePath oFile.path
         sProjectName = oProject[ 0 ].split( "/" ).pop()
         sFilename = sProjectName + "/" + oProject[ 1 ]
         sCreatedAt = @getCreationDate oFile.path
-
         sAuthor = process.env.USER || "Nameless"
 
-        return {
+        return {} =
             "path": sFilename,
             "createdAt": sCreatedAt,
             "author": sAuthor,
             "projectName": sProjectName
-        }
 
-    getTemplate: ( language ) ->
-        return fs.readFileSync __dirname + "/templates/" + language + ".txt", encoding: "utf8"
+    getTemplate: ( sLanguage ) ->
+        fs.readFileSync __dirname + "/templates/" + sLanguage + ".txt", encoding: "utf8"
 
-    insertText: ( editor ) ->
-        editor.setCursorScreenPosition [ 0, 0 ]
+    insertText: ( oEditor ) ->
+        oEditor.setCursorScreenPosition [ 0, 0 ]
 
         try
             file = @getFileInfo()
         catch oError
             return atom.notifications.addError oError.message
 
-        header = @getTemplate( editor.getGrammar().name )
+        header = @getTemplate( oEditor.getGrammar().name )
         header = header.replace "{{ projectName }}", file.projectName
         header = header.replace "{{ path }}", file.path
         header = header.replace "{{ createdAt }}", file.createdAt
         header = header.replace "{{ author }}", file.author
 
-        editor.insertText header
+        oEditor.insertText header
 
 Date.prototype.goodFormat = ->
     d = @getDate()
