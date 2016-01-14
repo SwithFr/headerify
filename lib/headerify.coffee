@@ -1,5 +1,10 @@
+# headerify
+# headerify/lib/headerify.coffee - [Optional comment]
+# Created at 11/01/2016 by Swith"
+
 {CompositeDisposable} = require "atom"
 fs = require "fs"
+Util = require "./util"
 
 module.exports =
     subscriptions: null
@@ -19,7 +24,7 @@ module.exports =
     getCreationDate: ( filepath ) ->
         file = fs.statSync filepath
 
-        file.birthtime.goodFormat()
+        Util.formatDate file.birthtime
 
     getFileInfo: () ->
         if !atom.workspace.getActivePaneItem().buffer.file
@@ -67,10 +72,3 @@ module.exports =
         header = header.replace "{{ author }}", file.author
 
         oEditor.insertText header
-
-Date.prototype.goodFormat = ->
-    d = @getDate()
-    y = @getFullYear()
-    m = @getMonth() + 1
-    m < 10 && m = "0" + m
-    d + "/" + m + "/" + y
