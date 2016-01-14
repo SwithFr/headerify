@@ -77,6 +77,5 @@ module.exports =
 
     setCursorOnOptionalCommentPosition: ( oEditor ) ->
         oEditor.scan /\[Optional comment\]/, ( match ) ->
-            console.log match.match
             oEditor.setSelectedBufferRange match.range
             match.stop()
