@@ -1,3 +1,7 @@
+# headerify
+# headerify/lib/util.coffee - Usefull function for this plugin
+# Created at 14/01/2016 by Swith"
+
 exports.formatDate = ( oDate ) ->
     d = oDate.getDate()
     y = oDate.getFullYear()
