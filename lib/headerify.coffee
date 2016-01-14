@@ -1,5 +1,5 @@
 # headerify
-# headerify/lib/headerify.coffee - [Optional comment]
+# headerify/lib/headerify.coffee - Simple plugin to add a comment header
 # Created at 11/01/2016 by Swith"
 
 {CompositeDisposable} = require "atom"
