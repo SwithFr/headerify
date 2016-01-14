@@ -72,3 +72,11 @@ module.exports =
         header = header.replace "{{ author }}", file.author
 
         oEditor.insertText header
+
+        @setCursorOnOptionalCommentPosition oEditor
+
+    setCursorOnOptionalCommentPosition: ( oEditor ) ->
+        oEditor.scan /\[Optional comment\]/, ( match ) ->
+            console.log match.match
+            oEditor.setSelectedBufferRange match.range
+            match.stop()
