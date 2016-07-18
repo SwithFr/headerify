@@ -1,0 +1,9 @@
+/** 
+* Project: {{ projectName }}
+* File: {{ path }} - [Optional comment]
+* Author: {{ author }}
+* Language: C/C++
+* License: Not defined
+*/
+
+
